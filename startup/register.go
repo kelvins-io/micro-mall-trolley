@@ -13,7 +13,7 @@ import (
 
 // RegisterGRPCServer 此处注册pb的Server
 func RegisterGRPCServer(grpcServer *grpc.Server) error {
-	trolley_business.RegisterTrolleyBusinessServiceServer(grpcServer, server.NewSkuBusinessServer())
+	trolley_business.RegisterTrolleyBusinessServiceServer(grpcServer, server.NewTrolleyBusinessServer())
 	return nil
 }
 
