@@ -1,0 +1,153 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "proto/micro_mall_trolley_proto/trolley_business/trolley_business.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/trolley/sku/join": {
+      "put": {
+        "summary": "添加商品到购物车",
+        "operationId": "JoinSku",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/trolley_businessJoinSkuResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/trolley_businessJoinSkuRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TrolleyBusinessService"
+        ]
+      }
+    },
+    "/v1/trolley/sku/remove": {
+      "delete": {
+        "summary": "从购物车移除商品",
+        "operationId": "RemoveSku",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/trolley_businessRemoveSkuResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "sku_code",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shop_id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TrolleyBusinessService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "trolley_businessCommonResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/definitions/trolley_businessRetCode"
+        },
+        "msg": {
+          "type": "string"
+        }
+      }
+    },
+    "trolley_businessJoinSkuRequest": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "format": "int64"
+        },
+        "sku_code": {
+          "type": "string"
+        },
+        "shop_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "time": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "selected": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "trolley_businessJoinSkuResponse": {
+      "type": "object",
+      "properties": {
+        "common": {
+          "$ref": "#/definitions/trolley_businessCommonResponse"
+        }
+      }
+    },
+    "trolley_businessRemoveSkuResponse": {
+      "type": "object",
+      "properties": {
+        "common": {
+          "$ref": "#/definitions/trolley_businessCommonResponse"
+        }
+      }
+    },
+    "trolley_businessRetCode": {
+      "type": "string",
+      "enum": [
+        "SUCCESS",
+        "ERROR",
+        "USER_NOT_EXIST",
+        "USER_EXIST",
+        "MERCHANT_NOT_EXIST",
+        "MERCHANT_EXIST",
+        "SHOP_NOT_EXIST",
+        "SHOP_EXIST",
+        "SKU_NOT_EXIST",
+        "SKU_EXIST"
+      ],
+      "default": "SUCCESS"
+    }
+  }
+}
