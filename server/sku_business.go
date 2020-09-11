@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"gitee.com/cristiane/micro-mall-trolley/pkg/code"
+	"gitee.com/cristiane/micro-mall-trolley/pkg/util"
 	"gitee.com/cristiane/micro-mall-trolley/proto/micro_mall_trolley_proto/trolley_business"
 	"gitee.com/cristiane/micro-mall-trolley/service"
 	"gitee.com/kelvins-io/common/errcode"
@@ -81,6 +82,39 @@ func (t *TrolleyBusinessServer) RemoveSku(ctx context.Context, req *trolley_busi
 			result.Common.Msg = errcode.GetErrMsg(code.ErrorServer)
 			return &result, nil
 		}
+	}
+
+	return &result, nil
+}
+
+func (t *TrolleyBusinessServer) GetUserTrolleyList(ctx context.Context, req *trolley_business.GetUserTrolleyListRequest) (*trolley_business.GetUserTrolleyListResponse, error) {
+	var result trolley_business.GetUserTrolleyListResponse
+	result.Common = &trolley_business.CommonResponse{}
+	result.Records = make([]*trolley_business.UserTrolleyRecord, 0)
+
+	list, retCode := service.GetUserTrolleyList(ctx, req.Uid)
+	if retCode != code.Success {
+		if retCode == code.UserNotExist {
+			result.Common.Code = trolley_business.RetCode_USER_NOT_EXIST
+			result.Common.Msg = errcode.GetErrMsg(code.UserNotExist)
+			return &result, nil
+		}
+	}
+	result.Records = make([]*trolley_business.UserTrolleyRecord, len(list))
+	for i := 0; i < len(list); i++ {
+		record := trolley_business.UserTrolleyRecord{
+			SkuCode:  list[i].SkuCode,
+			ShopId:   list[i].ShopId,
+			Time:     util.ParseTimeOfStr(list[i].JoinTime.Unix()),
+			Count:    int64(list[i].Count),
+			Selected: false,
+		}
+		if list[i].Selected == 1 {
+			record.Selected = false
+		} else {
+			record.Selected = true
+		}
+		result.Records[i] = &record
 	}
 
 	return &result, nil

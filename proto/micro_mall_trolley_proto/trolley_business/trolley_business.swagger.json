@@ -38,6 +38,32 @@
         ]
       }
     },
+    "/v1/trolley/sku/list": {
+      "get": {
+        "summary": "获取用户购物车中的商品",
+        "operationId": "GetUserTrolleyList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/trolley_businessGetUserTrolleyListResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TrolleyBusinessService"
+        ]
+      }
+    },
     "/v1/trolley/sku/remove": {
       "delete": {
         "summary": "从购物车移除商品",
@@ -87,6 +113,20 @@
         },
         "msg": {
           "type": "string"
+        }
+      }
+    },
+    "trolley_businessGetUserTrolleyListResponse": {
+      "type": "object",
+      "properties": {
+        "common": {
+          "$ref": "#/definitions/trolley_businessCommonResponse"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/trolley_businessUserTrolleyRecord"
+          }
         }
       }
     },
@@ -148,6 +188,29 @@
         "SKU_EXIST"
       ],
       "default": "SUCCESS"
+    },
+    "trolley_businessUserTrolleyRecord": {
+      "type": "object",
+      "properties": {
+        "sku_code": {
+          "type": "string"
+        },
+        "shop_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "time": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "selected": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
     }
   }
 }

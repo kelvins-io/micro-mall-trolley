@@ -20,7 +20,30 @@ service TrolleyBusinessService {
             delete: "/v1/trolley/sku/remove"
         };
     }
+    // 获取用户购物车中的商品
+    rpc GetUserTrolleyList(GetUserTrolleyListRequest) returns (GetUserTrolleyListResponse) {
+        option (google.api.http) = {
+            get: "/v1/trolley/sku/list"
+        };
+    }
 
+}
+
+message GetUserTrolleyListRequest {
+    int64 uid = 1;
+}
+
+message GetUserTrolleyListResponse {
+    CommonResponse common =1;
+    repeated UserTrolleyRecord records = 2;
+}
+
+message UserTrolleyRecord {
+    string sku_code = 2;
+    int64 shop_id = 3;
+    string time = 4;
+    int64 count = 5;
+    bool selected = 6;
 }
 
 message RemoveSkuRequest {
