@@ -132,56 +132,56 @@ func SkuJoinTrolley(ctx context.Context, req *trolley_business.JoinSkuRequest) (
 
 func RemoveSkuTrolley(ctx context.Context, req *trolley_business.RemoveSkuRequest) (retCode int) {
 	// 检查店铺是否存在
-	if req.ShopId > 0 {
-		serverName := args.RpcServiceMicroMallShop
-		conn, err := util.GetGrpcClient(serverName)
-		if err != nil {
-			kelvins.ErrLogger.Errorf(ctx, "GetGrpcClient %v,err: %v", serverName, err)
-			retCode = code.ErrorServer
-			return
-		}
-		defer conn.Close()
-
-		client := shop_business.NewShopBusinessServiceClient(conn)
-		r := shop_business.GetShopMaterialRequest{
-			ShopId: req.ShopId,
-		}
-		rsp, err := client.GetShopMaterial(ctx, &r)
-		if err != nil {
-			kelvins.ErrLogger.Errorf(ctx, "GetShopMaterial %v,err: %v, req: %+v", serverName, err, r)
-			retCode = code.ErrorServer
-			return
-		}
-		if rsp == nil || rsp.Material == nil || rsp.Material.ShopId <= 0 {
-			retCode = code.ShopBusinessNotExist
-			return
-		}
-	}
-	// 检查用户是否存在
-	if req.Uid > 0 {
-		serverName := args.RpcServiceMicroMallUsers
-		conn, err := util.GetGrpcClient(serverName)
-		if err != nil {
-			kelvins.ErrLogger.Errorf(ctx, "GetGrpcClient %v,err: %v", serverName, err)
-			retCode = code.ErrorServer
-			return
-		}
-		defer conn.Close()
-		client := users.NewUsersServiceClient(conn)
-		r := users.GetUserInfoRequest{
-			Uid: req.Uid,
-		}
-		rsp, err := client.GetUserInfo(ctx, &r)
-		if err != nil {
-			kelvins.ErrLogger.Errorf(ctx, "GetUserInfo %v,err: %v, req: %+v", serverName, err, r)
-			retCode = code.ErrorServer
-			return
-		}
-		if rsp.Info.Uid <= 0 {
-			retCode = code.UserNotExist
-			return
-		}
-	}
+	//if req.ShopId > 0 {
+	//	serverName := args.RpcServiceMicroMallShop
+	//	conn, err := util.GetGrpcClient(serverName)
+	//	if err != nil {
+	//		kelvins.ErrLogger.Errorf(ctx, "GetGrpcClient %v,err: %v", serverName, err)
+	//		retCode = code.ErrorServer
+	//		return
+	//	}
+	//	defer conn.Close()
+	//
+	//	client := shop_business.NewShopBusinessServiceClient(conn)
+	//	r := shop_business.GetShopMajorInfoRequest{
+	//		ShopIds: []int64{req.ShopId},
+	//	}
+	//	rsp, err := client.GetShopMajorInfo(ctx, &r)
+	//	if err != nil {
+	//		kelvins.ErrLogger.Errorf(ctx, "GetShopMaterial %v,err: %v, req: %+v", serverName, err, r)
+	//		retCode = code.ErrorServer
+	//		return
+	//	}
+	//	if rsp.Common.Code != shop_business.RetCode_SUCCESS {
+	//		retCode = code.ShopBusinessNotExist
+	//		return
+	//	}
+	//}
+	//// 检查用户是否存在
+	//if req.Uid > 0 {
+	//	serverName := args.RpcServiceMicroMallUsers
+	//	conn, err := util.GetGrpcClient(serverName)
+	//	if err != nil {
+	//		kelvins.ErrLogger.Errorf(ctx, "GetGrpcClient %v,err: %v", serverName, err)
+	//		retCode = code.ErrorServer
+	//		return
+	//	}
+	//	defer conn.Close()
+	//	client := users.NewUsersServiceClient(conn)
+	//	r := users.GetUserAccountIdRequest{
+	//		UidList: []int64{req.Uid},
+	//	}
+	//	rsp, err := client.GetUserAccountId(ctx, &r)
+	//	if err != nil {
+	//		kelvins.ErrLogger.Errorf(ctx, "GetUserInfo %v,err: %v, req: %+v", serverName, err, r)
+	//		retCode = code.ErrorServer
+	//		return
+	//	}
+	//	if rsp.Common.Code != users.RetCode_SUCCESS {
+	//		retCode = code.UserNotExist
+	//		return
+	//	}
+	//}
 	// 从购物车移除商品
 	query := map[string]interface{}{
 		"uid":      req.Uid,
