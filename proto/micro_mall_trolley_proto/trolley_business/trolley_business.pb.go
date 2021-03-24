@@ -645,7 +645,7 @@ func (c *trolleyBusinessServiceClient) GetUserTrolleyList(ctx context.Context, i
 	return out, nil
 }
 
-// TrolleyBusinessServiceServer is the server API for TrolleyBusinessService service.
+// TrolleyBusinessServiceServer is the internal API for TrolleyBusinessService service.
 type TrolleyBusinessServiceServer interface {
 	// 添加商品到购物车
 	JoinSku(context.Context, *JoinSkuRequest) (*JoinSkuResponse, error)
