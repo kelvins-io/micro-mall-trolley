@@ -14,3 +14,7 @@ vendor
 logs
 etc/app.ini
 micro-mall-trolley
+micro-mall-trolley.pid
+micro-mall-trolley-darwin-amd64
+micro-mall-trolley-linux-amd64
+micro-mall-trolley-windows-amd64.exe
