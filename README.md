@@ -4,20 +4,47 @@
 微商城--购物车
 
 #### 软件架构
-软件架构说明
+grpc
 
+#### 框架，库依赖
+kelvins框架支持（gRPC，cron，queue，web支持）：https://gitee.com/kelvins-io/kelvins   
+g2cache缓存库支持（两级缓存）：https://gitee.com/kelvins-io/g2cache   
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.仅构建  sh build.sh   
+2 运行  sh build-run.sh   
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```toml
+[kelvins-server]
+EndPoint = 8080
+IsRecordCallResponse = true
+
+[kelvins-logger]
+RootPath = "./logs"
+Level = "debug"
+
+[kelvins-mysql]
+Host = "127.0.0.1:3306"
+UserName = "root"
+Password = "yertyert"
+DBName = "micro_mall_trolley"
+Charset = "utf8"
+PoolNum =  10
+MaxIdleConns = 5
+ConnMaxLifeSecond = 3600
+MultiStatements = true
+ParseTime = true
+
+[kelvins-redis]
+Host = "127.0.0.1:6379"
+Password = "dfasdf"
+DB = 1
+PoolNum = 10
+
+```
 
 #### 参与贡献
 
@@ -25,13 +52,3 @@
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request
-
-
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
