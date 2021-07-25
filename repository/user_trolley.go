@@ -27,11 +27,6 @@ func GetSkuUserTrolley(query map[string]interface{}) (*mysql.UserTrolley, error)
 	return &result, err
 }
 
-func CheckSkuExistUserTrolley(query map[string]interface{}) (exist bool, err error) {
-	exist, err = kelvins.XORM_DBEngine.Table(mysql.TableUserTrolley).Where(query).Exist(&mysql.UserTrolley{})
-	return
-}
-
 func GetUserTrolleyList(uid int64) ([]mysql.UserTrolley, error) {
 	var list = make([]mysql.UserTrolley, 0)
 	var err error

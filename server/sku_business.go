@@ -19,33 +19,12 @@ func (t *TrolleyBusinessServer) JoinSku(ctx context.Context, req *trolley_busine
 	var result trolley_business.JoinSkuResponse
 	result.Common = &trolley_business.CommonResponse{
 		Code: trolley_business.RetCode_SUCCESS,
-		Msg:  errcode.GetErrMsg(code.Success),
-	}
-	if req.Uid <= 0 {
-		result.Common.Code = trolley_business.RetCode_USER_NOT_EXIST
-		result.Common.Msg = errcode.GetErrMsg(code.UserNotExist)
-		return &result, nil
-	}
-	if req.ShopId <= 0 {
-		result.Common.Code = trolley_business.RetCode_SHOP_NOT_EXIST
-		result.Common.Msg = errcode.GetErrMsg(code.ShopBusinessNotExist)
-		return &result, nil
 	}
 	retCode := service.SkuJoinTrolley(ctx, req)
 	if retCode != code.Success {
-		if retCode == code.UserNotExist {
-			result.Common.Code = trolley_business.RetCode_USER_NOT_EXIST
-			result.Common.Msg = errcode.GetErrMsg(code.UserNotExist)
-			return &result, nil
-		} else if retCode == code.ShopBusinessNotExist {
-			result.Common.Code = trolley_business.RetCode_SHOP_NOT_EXIST
-			result.Common.Msg = errcode.GetErrMsg(code.ShopBusinessNotExist)
-			return &result, nil
-		} else {
-			result.Common.Code = trolley_business.RetCode_ERROR
-			result.Common.Msg = errcode.GetErrMsg(code.ErrorServer)
-			return &result, nil
-		}
+		result.Common.Code = trolley_business.RetCode_ERROR
+		result.Common.Msg = errcode.GetErrMsg(code.ErrorServer)
+		return &result, nil
 	}
 
 	return &result, nil
@@ -55,50 +34,29 @@ func (t *TrolleyBusinessServer) RemoveSku(ctx context.Context, req *trolley_busi
 	var result trolley_business.RemoveSkuResponse
 	result.Common = &trolley_business.CommonResponse{
 		Code: trolley_business.RetCode_SUCCESS,
-		Msg:  errcode.GetErrMsg(code.Success),
-	}
-	if req.Uid <= 0 {
-		result.Common.Code = trolley_business.RetCode_USER_NOT_EXIST
-		result.Common.Msg = errcode.GetErrMsg(code.UserNotExist)
-		return &result, nil
-	}
-	if req.ShopId <= 0 {
-		result.Common.Code = trolley_business.RetCode_SHOP_NOT_EXIST
-		result.Common.Msg = errcode.GetErrMsg(code.ShopBusinessNotExist)
-		return &result, nil
 	}
 	retCode := service.RemoveSkuTrolley(ctx, req)
 	if retCode != code.Success {
-		if retCode == code.UserNotExist {
-			result.Common.Code = trolley_business.RetCode_USER_NOT_EXIST
-			result.Common.Msg = errcode.GetErrMsg(code.UserNotExist)
-			return &result, nil
-		} else if retCode == code.ShopBusinessNotExist {
-			result.Common.Code = trolley_business.RetCode_SHOP_NOT_EXIST
-			result.Common.Msg = errcode.GetErrMsg(code.ShopBusinessNotExist)
-			return &result, nil
-		} else {
-			result.Common.Code = trolley_business.RetCode_ERROR
-			result.Common.Msg = errcode.GetErrMsg(code.ErrorServer)
-			return &result, nil
-		}
+		result.Common.Code = trolley_business.RetCode_ERROR
+		result.Common.Msg = errcode.GetErrMsg(code.ErrorServer)
+		return &result, nil
 	}
 
 	return &result, nil
 }
 
 func (t *TrolleyBusinessServer) GetUserTrolleyList(ctx context.Context, req *trolley_business.GetUserTrolleyListRequest) (*trolley_business.GetUserTrolleyListResponse, error) {
-	var result trolley_business.GetUserTrolleyListResponse
-	result.Common = &trolley_business.CommonResponse{}
-	result.Records = make([]*trolley_business.UserTrolleyRecord, 0)
-
+	var result = trolley_business.GetUserTrolleyListResponse{
+		Common: &trolley_business.CommonResponse{
+			Code: trolley_business.RetCode_SUCCESS,
+		},
+		Records: make([]*trolley_business.UserTrolleyRecord, 0),
+	}
 	list, retCode := service.GetUserTrolleyList(ctx, req.Uid)
 	if retCode != code.Success {
-		if retCode == code.UserNotExist {
-			result.Common.Code = trolley_business.RetCode_USER_NOT_EXIST
-			result.Common.Msg = errcode.GetErrMsg(code.UserNotExist)
-			return &result, nil
-		}
+		result.Common.Code = trolley_business.RetCode_ERROR
+		result.Common.Msg = errcode.GetErrMsg(code.ErrorServer)
+		return &result, nil
 	}
 	result.Records = make([]*trolley_business.UserTrolleyRecord, len(list))
 	for i := 0; i < len(list); i++ {
