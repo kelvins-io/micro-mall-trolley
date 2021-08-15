@@ -14,12 +14,18 @@
     "/v1/trolley/sku/join": {
       "put": {
         "summary": "添加商品到购物车",
-        "operationId": "JoinSku",
+        "operationId": "TrolleyBusinessService_JoinSku",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/trolley_businessJoinSkuResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -41,12 +47,18 @@
     "/v1/trolley/sku/list": {
       "get": {
         "summary": "获取用户购物车中的商品",
-        "operationId": "GetUserTrolleyList",
+        "operationId": "TrolleyBusinessService_GetUserTrolleyList",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/trolley_businessGetUserTrolleyListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -67,12 +79,18 @@
     "/v1/trolley/sku/remove": {
       "delete": {
         "summary": "从购物车移除商品",
-        "operationId": "RemoveSku",
+        "operationId": "TrolleyBusinessService_RemoveSku",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/trolley_businessRemoveSkuResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
             }
           }
         },
@@ -105,6 +123,39 @@
     }
   },
   "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
     "trolley_businessCommonResponse": {
       "type": "object",
       "properties": {
@@ -152,8 +203,7 @@
           "format": "int64"
         },
         "selected": {
-          "type": "boolean",
-          "format": "boolean"
+          "type": "boolean"
         }
       }
     },
@@ -207,8 +257,7 @@
           "format": "int64"
         },
         "selected": {
-          "type": "boolean",
-          "format": "boolean"
+          "type": "boolean"
         }
       }
     }
