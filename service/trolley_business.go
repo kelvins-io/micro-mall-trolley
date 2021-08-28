@@ -6,6 +6,7 @@ import (
 	"gitee.com/cristiane/micro-mall-trolley/pkg/code"
 	"gitee.com/cristiane/micro-mall-trolley/proto/micro_mall_trolley_proto/trolley_business"
 	"gitee.com/cristiane/micro-mall-trolley/repository"
+	"gitee.com/kelvins-io/common/json"
 	"gitee.com/kelvins-io/kelvins"
 	"time"
 )
@@ -20,7 +21,7 @@ func SkuJoinTrolley(ctx context.Context, req *trolley_business.JoinSkuRequest) (
 	}
 	record, err := repository.GetSkuUserTrolley(query)
 	if err != nil {
-		kelvins.ErrLogger.Errorf(ctx, "CheckSkuExistUserTrolley %v,err: %v, query: %+v", err, query)
+		kelvins.ErrLogger.Errorf(ctx, "CheckSkuExistUserTrolley err: %v, query: %v", err, json.MarshalToStringNoError(query))
 		retCode = code.ErrorServer
 		return
 	}
@@ -42,7 +43,7 @@ func SkuJoinTrolley(ctx context.Context, req *trolley_business.JoinSkuRequest) (
 		record.UpdateTime = time.Now()
 		err := repository.UpdateSkuTrolleyStruct(query, record)
 		if err != nil {
-			kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolleyStruct %v,err: %v, query: %+v, record: %+v", err, query, record)
+			kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolleyStruct err: %v, query: %v, record: %v", err, json.MarshalToStringNoError(query), json.MarshalToStringNoError(record))
 			retCode = code.ErrorServer
 			return
 		}
@@ -64,7 +65,7 @@ func SkuJoinTrolley(ctx context.Context, req *trolley_business.JoinSkuRequest) (
 		}
 		err := repository.AddSkuTrolley(&skuAdd)
 		if err != nil {
-			kelvins.ErrLogger.Errorf(ctx, "AddSkuTrolley %v,err: %v, skuAdd: %+v", err, skuAdd)
+			kelvins.ErrLogger.Errorf(ctx, "AddSkuTrolley err: %v, skuAdd: %v", err, json.MarshalToStringNoError(skuAdd))
 			retCode = code.ErrorServer
 			return
 		}
@@ -84,7 +85,7 @@ func RemoveSkuTrolley(ctx context.Context, req *trolley_business.RemoveSkuReques
 	}
 	err := repository.UpdateSkuTrolley(query, maps)
 	if err != nil {
-		kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolley %v,err: %v, query: %+v, maps: %+v", err, query, maps)
+		kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolley err: %v, query: %+v, maps: %+v", err, query, maps)
 		retCode = code.ErrorServer
 		return
 	}
@@ -97,7 +98,7 @@ func GetUserTrolleyList(ctx context.Context, uid int64) ([]mysql.UserTrolley, in
 	var result = make([]mysql.UserTrolley, 0)
 	list, err := repository.GetUserTrolleyList(uid)
 	if err != nil {
-		kelvins.ErrLogger.Errorf(ctx, "GetUserTrolleyList %v,err: %v, uid: %+v", err, uid)
+		kelvins.ErrLogger.Errorf(ctx, "GetUserTrolleyList err: %v, uid: %v", err, uid)
 		return result, code.ErrorServer
 	}
 	return list, code.Success
