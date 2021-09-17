@@ -10,20 +10,20 @@ func AddSkuTrolley(model *mysql.UserTrolley) (err error) {
 	return
 }
 
-func UpdateSkuTrolley(query, maps map[string]interface{}) (err error) {
-	_, err = kelvins.XORM_DBEngine.Table(mysql.TableUserTrolley).Where(query).Update(maps)
+func UpdateSkuTrolley(query, maps map[string]interface{}) (rowsAffected int64, err error) {
+	rowsAffected, err = kelvins.XORM_DBEngine.Table(mysql.TableUserTrolley).Where(query).Update(maps)
 	return
 }
 
-func UpdateSkuTrolleyStruct(query map[string]interface{}, model *mysql.UserTrolley) (err error) {
-	_, err = kelvins.XORM_DBEngine.Table(mysql.TableUserTrolley).Where(query).Update(model)
+func UpdateSkuTrolleyStruct(query map[string]interface{}, model *mysql.UserTrolley) (rowsAffected int64, err error) {
+	rowsAffected, err = kelvins.XORM_DBEngine.Table(mysql.TableUserTrolley).Where(query).Update(model)
 	return
 }
 
-func GetSkuUserTrolley(query map[string]interface{}) (*mysql.UserTrolley, error) {
+func GetSkuUserTrolley(selectSql string, query map[string]interface{}) (*mysql.UserTrolley, error) {
 	var result mysql.UserTrolley
 	var err error
-	_, err = kelvins.XORM_DBEngine.Table(mysql.TableUserTrolley).Where(query).Desc("join_time").Get(&result)
+	_, err = kelvins.XORM_DBEngine.Table(mysql.TableUserTrolley).Select(selectSql).Where(query).Desc("join_time").Get(&result)
 	return &result, err
 }
 

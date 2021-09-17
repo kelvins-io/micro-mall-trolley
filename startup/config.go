@@ -1,8 +1,6 @@
 package startup
 
-const (
-
-)
+const ()
 
 // LoadConfig 加载配置对象映射
 func LoadConfig() error {

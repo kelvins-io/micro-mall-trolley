@@ -19,9 +19,9 @@ func SkuJoinTrolley(ctx context.Context, req *trolley_business.JoinSkuRequest) (
 		"shop_id":  req.ShopId,
 		"state":    1,
 	}
-	record, err := repository.GetSkuUserTrolley(query)
+	record, err := repository.GetSkuUserTrolley("id,count,state,selected,update_time", query)
 	if err != nil {
-		kelvins.ErrLogger.Errorf(ctx, "CheckSkuExistUserTrolley err: %v, query: %v", err, json.MarshalToStringNoError(query))
+		kelvins.ErrLogger.Errorf(ctx, "GetSkuUserTrolley err: %v, query: %v", err, json.MarshalToStringNoError(query))
 		retCode = code.ErrorServer
 		return
 	}
@@ -31,6 +31,7 @@ func SkuJoinTrolley(ctx context.Context, req *trolley_business.JoinSkuRequest) (
 			"sku_code": req.SkuCode,
 			"shop_id":  req.ShopId,
 			"state":    1,
+			"count":    record.Count,
 		}
 		record.Count += int(req.Count)
 		record.State = 1
@@ -39,11 +40,11 @@ func SkuJoinTrolley(ctx context.Context, req *trolley_business.JoinSkuRequest) (
 		} else {
 			record.Selected = 1
 		}
-		record.JoinTime = time.Now()
 		record.UpdateTime = time.Now()
-		err := repository.UpdateSkuTrolleyStruct(query, record)
-		if err != nil {
-			kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolleyStruct err: %v, query: %v, record: %v", err, json.MarshalToStringNoError(query), json.MarshalToStringNoError(record))
+		rowsAffected, err := repository.UpdateSkuTrolleyStruct(query, record)
+		if err != nil || rowsAffected != 1 {
+			kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolleyStruct rowsAffected: %v, err: %v, query: %v, record: %v",
+				rowsAffected, err, json.MarshalToStringNoError(query), json.MarshalToStringNoError(record))
 			retCode = code.ErrorServer
 			return
 		}
@@ -74,18 +75,56 @@ func SkuJoinTrolley(ctx context.Context, req *trolley_business.JoinSkuRequest) (
 }
 
 func RemoveSkuTrolley(ctx context.Context, req *trolley_business.RemoveSkuRequest) (retCode int) {
+	if req.Count == 0 {
+		req.Count = 1
+	}
+	originalCount := -1
+	{
+		query := map[string]interface{}{
+			"uid":      req.Uid,
+			"sku_code": req.SkuCode,
+			"shop_id":  req.ShopId,
+			"state":    1,
+		}
+		record, err := repository.GetSkuUserTrolley("id,count", query)
+		if err != nil {
+			kelvins.ErrLogger.Errorf(ctx, "GetSkuUserTrolley err: %v, query: %v", err, json.MarshalToStringNoError(query))
+			retCode = code.ErrorServer
+			return
+		}
+		if record != nil && record.Id > 0 {
+			originalCount = record.Count
+		}
+	}
 	// 从购物车移除商品
 	query := map[string]interface{}{
 		"uid":      req.Uid,
 		"sku_code": req.SkuCode,
 		"shop_id":  req.ShopId,
+		"state":    1,
+	}
+	if originalCount > 0 {
+		query["count"] = originalCount
 	}
 	maps := map[string]interface{}{
-		"state": 2,
+		"update_time": time.Now(),
 	}
-	err := repository.UpdateSkuTrolley(query, maps)
-	if err != nil {
-		kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolley err: %v, query: %+v, maps: %+v", err, query, maps)
+	if req.Count > 0 {
+		diffCount := originalCount - int(req.Count)
+		if diffCount < 0 {
+			diffCount = 0
+		}
+		maps["count"] = diffCount
+		if diffCount == 0 {
+			maps["state"] = 2
+		}
+	} else {
+		maps["state"] = 2
+		maps["count"] = 0
+	}
+	rowsAffected, err := repository.UpdateSkuTrolley(query, maps)
+	if err != nil || rowsAffected != 1 {
+		kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolley rowsAffected: %v, err: %v, query: %+v, maps: %+v", rowsAffected, err, query, maps)
 		retCode = code.ErrorServer
 		return
 	}

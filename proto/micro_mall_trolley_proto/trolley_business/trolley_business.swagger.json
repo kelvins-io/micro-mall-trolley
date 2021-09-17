@@ -114,6 +114,13 @@
             "required": false,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "tags": [
