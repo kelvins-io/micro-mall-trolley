@@ -123,7 +123,7 @@ func RemoveSkuTrolley(ctx context.Context, req *trolley_business.RemoveSkuReques
 		maps["count"] = 0
 	}
 	rowsAffected, err := repository.UpdateSkuTrolley(query, maps)
-	if err != nil || rowsAffected != 1 {
+	if err != nil {
 		kelvins.ErrLogger.Errorf(ctx, "UpdateSkuTrolley rowsAffected: %v, err: %v, query: %+v, maps: %+v", rowsAffected, err, query, maps)
 		retCode = code.ErrorServer
 		return
